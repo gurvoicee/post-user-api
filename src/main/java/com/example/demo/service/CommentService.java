@@ -5,6 +5,7 @@ import com.example.demo.entities.Post;
 import com.example.demo.entities.User;
 import com.example.demo.repository.CommentRepository;
 import com.example.demo.requests.CommentCreateRequest;
+import com.example.demo.requests.CommentUpdateRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,5 +44,23 @@ public class CommentService {
             return commentRepository.save(toSaveComment);
         }
         return null;
+    }
+
+    public Comment updateCommnent(CommentUpdateRequest commentUpdateRequest,Long commentId) {
+        User user = userService.getOne(commentUpdateRequest.getUserId());
+        Post post = postService.getOnePost(commentUpdateRequest.getPostId());
+        Comment comment = commentRepository.findById(commentId).orElse(null);
+        if (user != null && post != null && comment != null
+                && comment.getUser() == user
+                && comment.getPost() == post){
+            comment.setText(commentUpdateRequest.getText());
+            return commentRepository.save(comment);
+        }
+        return null;
+    }
+
+    public void delete(Long commentId) {
+        Comment comment = commentRepository.findById(commentId).orElse(null);
+        commentRepository.delete(comment);
     }
 }
