@@ -20,6 +20,9 @@ public class PostService {
         List<Post> list = postRepository.findAll();
         return list;
     }
+    public Post getOnePost(Long postId){
+        return postRepository.findById(postId).orElse(null);
+    }
 
     public List<Post> getPostsOfOneUser(Long userId) {
         User user = userService.getOne(userId);

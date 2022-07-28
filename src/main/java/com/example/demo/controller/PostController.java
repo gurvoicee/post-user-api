@@ -19,9 +19,13 @@ public class PostController {
     public List<Post> getAllPosts(){
         return postService.getAllPosts();
     }
-    @GetMapping("/{userId}")
+    @GetMapping("/userId/{userId}")
     public List<Post> getPostsOfOneUser(@PathVariable Long userId){
         return postService.getPostsOfOneUser(userId);
+    }
+    @GetMapping("/postId/{postId}")
+    public Post getOnePostById(@PathVariable Long postId){
+        return postService.getOnePost(postId);
     }
     @PostMapping
     public Post createPost(@RequestBody PostCreateRequest postCreateRequest){
