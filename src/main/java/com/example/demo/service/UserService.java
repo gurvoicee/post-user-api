@@ -19,6 +19,5 @@ public class UserService {
         return newUser;
     }
 
-
 }
 

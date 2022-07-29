@@ -30,36 +30,45 @@ class LoadDatabase {
     CommandLineRunner initDatabase(UserRepository userRepository, CommentRepository commentRepository,PostRepository postRepository) {
 
         return args -> {
+
             User user = new User("ahmet","123");
-            User user2 = new User("ahmet","123");
-            User user3 = new User("ahmet","123");
+            User user2 = new User("mehmet","1232");
+            User user3 = new User("hasan","29383");
             userRepository.save(user3);
             userRepository.save(user2);
             userRepository.save(user);
-            Post post1 = new Post("fasdf", user,"2fsfsdafsadf");
-            Post post2 = new Post("fasdf", user,"2fsfsdafsadf");
-            Post post3 = new Post("fasdf", user,"2fsfsdafsadf");
-            Post post4 = new Post("fasdf", user2,"2fsfsdafsadf");
-            Post post5 = new Post("fasdf", user2,"2fsfsdafsadf");
-            Post post6 = new Post("fasdf", user2,"2fsfsdafsadf");
+
+
+            Post post1 = new Post("yurt dışı", user," farklı alanlardan bakıldığında değerlendirmesi zor bir konu");
+            Post post2 = new Post("kara cisim ışıması", user,"11. sınıfta sınavda çıkan bu konuda araştırmayı derinleştirmek istiyorum");
+            Post post3 = new Post("a", user,"a hakkında bir text");
+            Post post4 = new Post("b", user2,"b hakkında bir text");
+            Post post5 = new Post("c", user2,"c hakkında bir text");
+            Post post6 = new Post("d", user2,"d hakkında bir text");
+
             postRepository.save(post1);
             postRepository.save(post2);
             postRepository.save(post3);
             postRepository.save(post4);
             postRepository.save(post5);
             postRepository.save(post6);
-            Comment comment1 = new Comment(user,post1,"fdsafdsaffsdfasdf");
-            Comment comment2 = new Comment(user,post1,"fdsafdsaffsdfasdf");
-            Comment comment3 = new Comment(user2,post1,"fdsafdsaffsdfasdf");
-            Comment comment4 = new Comment(user3,post2,"fdsafdsaffsdfasdf");
-            Comment comment5 = new Comment(user,post2,"fdsafdsaffsdfasdf");
-            Comment comment6 = new Comment(user3,post2,"fdsafdsaffsdfasdf");
+
+
+            Comment comment1 = new Comment(user,post1,"size katılıyorum");
+            Comment comment2 = new Comment(user,post1,"aslında çok farklı bakış açılarına da ihtiyacınız var");
+            Comment comment3 = new Comment(user2,post1,"haklısın");
+            Comment comment4 = new Comment(user3,post2,"sen anca gez");
+            Comment comment5 = new Comment(user,post2,"güzel soru");
+            Comment comment6 = new Comment(user3,post2,"güzel kurgu... devam. inandık");
+            Comment comment7 = new Comment(user3,post6,"başlığa uygun bir konu olmuş. ellerine sağlık");
+
             commentRepository.save(comment1);
             commentRepository.save(comment2);
             commentRepository.save(comment3);
             commentRepository.save(comment4);
             commentRepository.save(comment5);
             commentRepository.save(comment6);
+
         };
     }
 }
