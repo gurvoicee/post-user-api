@@ -7,6 +7,7 @@ import org.apache.catalina.startup.WebappServiceLoader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -73,13 +74,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .csrf().disable()
                 .exceptionHandling().authenticationEntryPoint(handler).and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
+                .antMatchers(HttpMethod.GET, "/posts")
+                .permitAll()
+                .antMatchers(HttpMethod.GET, "/comments")
+                .permitAll()
+                .antMatchers(HttpMethod.GET, "/v1/users")
+                .permitAll()
                 .antMatchers("/auth/**")
-                . permitAll()
-                .anyRequest()
-                .authenticated();
+                .permitAll()
+                .anyRequest().authenticated();
 
         /*
         httpSecurity

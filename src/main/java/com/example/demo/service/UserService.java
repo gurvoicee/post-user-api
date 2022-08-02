@@ -19,5 +19,8 @@ public class UserService {
         return newUser;
     }
 
+    public User getOneByUserName(String userName) {
+        return userRepository.findByUserName(userName);
+    }
 }
 

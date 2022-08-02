@@ -1,13 +1,18 @@
 package com.example.demo.security;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.SignatureException;
+import io.jsonwebtoken.UnsupportedJwtException;
 
 @Component
 public class JwtTokenProvider {
@@ -18,23 +23,41 @@ public class JwtTokenProvider {
 
 
     public String generateJwt(Authentication authentication){
+
         JwtUserDetails userDetails = (JwtUserDetails) authentication.getPrincipal();
+
         Date expireDate = new Date(new Date().getTime() + EXPIRES_IN);
+        System.out.println(APP_SECRET);
         return Jwts.builder().setSubject(Long.toString(userDetails.getId()))
                 .setIssuedAt(new Date())
                 .setExpiration(expireDate)
-                .signWith(SignatureAlgorithm.ES512,APP_SECRET).compact();
+                .signWith(SignatureAlgorithm.HS512, APP_SECRET).compact();
     }
+    public String generateJwtTokenByUserId(Long userId) {
+        Date expireDate = new Date(new Date().getTime() + EXPIRES_IN);
+        return Jwts.builder().setSubject(Long.toString(userId))
+                .setIssuedAt(new Date()).setExpiration(expireDate)
+                .signWith(SignatureAlgorithm.HS512,APP_SECRET).compact();
+    }
+
     public Long getUserIdFromJwt(String token){
         Claims claims = Jwts.parser().setSigningKey(APP_SECRET).parseClaimsJws(token).getBody();
         return Long.parseLong(claims.getSubject());
     }
     //validate islemini yapalım
-    public boolean validateToken(String token){
+    boolean validateToken(String token) {
         try {
             Jwts.parser().setSigningKey(APP_SECRET).parseClaimsJws(token);
-            return isTokenExpired(token);
-        }catch (Exception e){
+            return !isTokenExpired(token);
+        } catch (SignatureException e) {
+            return false;
+        } catch (MalformedJwtException e) {
+            return false;
+        } catch (ExpiredJwtException e) {
+            return false;
+        } catch (UnsupportedJwtException e) {
+            return false;
+        } catch (IllegalArgumentException e) {
             return false;
         }
     }

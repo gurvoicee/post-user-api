@@ -10,10 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -27,13 +25,19 @@ public class AuthController {
     UserService userService;
     @Autowired
     PasswordEncoder passwordEncoder;
+
     @PostMapping("/login")
     public String login(@RequestBody UserRequest loginRequest){
+
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(loginRequest.getUserName(),loginRequest.getPassword());
+
         Authentication auth = authenticationManager.authenticate(authToken);
+
         SecurityContextHolder.getContext().setAuthentication(auth);
+
         String jwtToken = jwtTokenProvider.generateJwt(auth);
-        return "Bearer" + jwtToken;
+        System.out.println();
+        return "Bearer " + jwtToken;
     }
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody UserRequest userRequest){
@@ -41,7 +45,7 @@ public class AuthController {
             return new ResponseEntity<>("userName already is used.",HttpStatus.BAD_REQUEST);
         }
         User user = new User();
-        user.setName(userRequest.getUserName());
+        user.setUserName(userRequest.getUserName());
         user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
         userService.createOne(user);
         return  new ResponseEntity<>("user succesfully is registred",HttpStatus.CREATED);
